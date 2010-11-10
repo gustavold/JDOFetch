@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<jdo xmlns="http://java.sun.com/xml/ns/jdo/jdo"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://java.sun.com/xml/ns/jdo/jdo http://java.sun.com/xml/ns/jdo/jdo_2_2.xsd">
+
+  <package name="entities">
+        <sequence name="OWNER_SEQ" datastore-sequence="owner_id_seq" strategy="contiguous"/>
+        <sequence name="PET_SEQ" datastore-sequence="pet_id_seq" strategy="contiguous"/>
+        <sequence name="PET_TYPE_SEQ" datastore-sequence="pet_type_id_seq" strategy="contiguous"/>
+
+<class name="Owner" detachable="true" table="owner" identity-type="application"
+    objectid-class="Owner$PK">
+    <field name="id" primary-key="true" value-strategy="sequence" sequence="OWNER_SEQ"/>
+    <field name="name">
+        <column length="80" jdbc-type="VARCHAR"/>
+    </field>
+    <field name="pets" mapped-by="owner">
+        <collection element-type="entities.Pet"/>
+    </field>
+    <fetch-group name="detach_owner_pets">
+        <field name="pets">
+        </field>
+    </fetch-group>
+</class>
+
+<class name="PetType" detachable="true" table="pet_type" identity-type="application"
+    objectid-class="PetType$PK">
+    <field name="id" primary-key="true" value-strategy="sequence" sequence="PET_TYPE_SEQ"/>
+    <field name="name">
+        <column length="80" jdbc-type="VARCHAR"/>
+    </field>
+</class>
+<class name="Pet" detachable="true" table="pet" identity-type="application"
+    objectid-class="Pet$PK">
+    <field name="id" primary-key="true" value-strategy="sequence" sequence="PET_SEQ"/>
+    <field name="name">
+        <column length="30" jdbc-type="VARCHAR"/>
+    </field>
+    <field name="type" persistence-modifier="persistent">
+        <column name="type_id" />
+    </field>
+    <field name="owner" persistence-modifier="persistent">
+        <column name="owner_id" />
+    </field>
+    <fetch-group name="detach_pet_type">
+        <field name="type"/>
+    </fetch-group>
+</class>
+</package>
+</jdo>
